@@ -18,11 +18,12 @@ do
 	usuarios=$(echo $linea | cut -d: -f4 | sed "s/,/ /g")
 
 	#Volcar datos al archivo ldif
-	echo "dn: cn=$cn,ou=grupos,dc=smr,dc=sor" >> tmp.ldif
-	echo "objectClass: posixGroup" >> tmp.ldif
-	echo "cn: $cn" >> tmp.ldif
-	echo "gidNumber: $gid" >> tmp.ldif
-	echo "" >> tmp.ldif
+	echo -e "
+	dn: cn=$cn,ou=grupos,dc=smr,dc=sor
+	objectClass: posixGroup
+	cn: $cn
+	gidNumber: $gid
+    	" >> tmp.ldif
 
 	#añadir usuarios
 	for usuario in ${usuarios};
