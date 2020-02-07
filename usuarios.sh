@@ -24,18 +24,20 @@ do
 	then
 	echo "voy a meter al usuario"
 	#Volcar datos al archivo ldif
-		echo "dn: uid=$usuario,ou=usuarios,dc=smr,dc=sor" >> tmp.ldif
-		echo "objectClass: inetOrgPerson" >> tmp.ldif
-		echo "objectClass: posixAccount" >> tmp.ldif
-		echo "objectClass: shadowAccount" >> tmp.ldif
-		echo "uid: $usuario" >> tmp.ldif 
-		echo "cn: $usuario $apellido" >> tmp.ldif
-		echo "sn: $usuario $apellido" >> tmp.ldif
-		echo "uidNumber: $uid" >> tmp.ldif
-		echo "gidNumber: $gid" >> tmp.ldif
-		echo "userPassword: smr1234" >> tmp.ldif
-		echo "homeDirectory: /perfiles/$usuario" >> tmp.ldif
-		echo "" >> tmp.ldif
+		echo -e "
+		dn: uid=$usuario,ou=usuarios,dc=smr,dc=sor
+		objectClass: inetOrgPerson
+		objectClass: posixAccount
+		objectClass: shadowAccount
+		uid: $usuario 
+		cn: $usuario $apellido
+		sn: $usuario $apellido
+		uidNumber: $uid
+		gidNumber: $gid
+		userPassword: smr1234
+		homeDirectory: /perfiles/$usuario
+		
+		" >> tmp.ldif
 	else
 	echo "no voy a meter el usuario por que ya existe"
 	fi
