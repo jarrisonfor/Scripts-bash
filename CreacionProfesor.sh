@@ -6,7 +6,7 @@ if [ -f "$2" ]; then
             sudo apt update && sudo apt upgrade -y
             sudo apt install ssh composer npm fish apache2 apache2-utils mysql-server zip unzip php php-mysql php-zip libapache2-mod-php php-cli php-common php-mbstring php-gd php-intl php-xml php-mysql php-zip php-curl php-xmlrpc -y
             sudo mysql_secure_installation
-            read -p 'contraseña para el mysql' password
+            read -p 'Contraseña para el mysql' password
             sudo mysql -u root -e "CREATE DATABASE $USER"
             sudo mysql -u root -e "CREATE USER '$USER'@'%' IDENTIFIED BY '$password'"
             sudo mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO '$USER'@'%' WITH GRANT OPTION"
@@ -17,7 +17,6 @@ if [ -f "$2" ]; then
             sudo mv /var/www/html/phpMyAdmin* /var/www/html/phpmyadmin/
             sudo rm /var/www/html/phpmyadmin.zip
 
-            # faltan pasos para instalarlo
             sudo mv /var/www/html/phpmyadmin/config.sample.inc.php /var/www/html/phpmyadmin/config.inc.php
             sudo sed -i "/blowfish_secret/ c \$cfg['blowfish_secret'] = 'iVkv2U2E}E9bgpGWhUg-DpYUQf;h7rxN';" /var/www/html/phpmyadmin/config.inc.php
             sudo chown www-data:www-data /var/www/html/* -R
