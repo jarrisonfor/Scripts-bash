@@ -4,17 +4,17 @@ if [ -f "$2" ]; then
         -i)
             # instalacion
             sudo apt update && sudo apt upgrade -y
-            sudo apt install ssh composer npm fish apache2 apache2-utils mysql-server zip unzip php php-mysql php-zip libapache2-mod-php php-cli php-common php-mbstring php-gd php-intl php-xml php-mysql php-zip php-curl php-xmlrpc -y
+            sudo apt install ssh composer npm fish quota quotatool apache2 apache2-utils mysql-server zip unzip php php-mysql php-zip libapache2-mod-php php-cli php-common php-mbstring php-gd php-intl php-xml php-mysql php-zip php-curl php-xmlrpc -y
             sudo mysql_secure_installation
             read -p 'Contraseña para el mysql' password
             sudo mysql -u root -e "CREATE DATABASE $USER"
             sudo mysql -u root -e "CREATE USER '$USER'@'%' IDENTIFIED BY '$password'"
             sudo mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO '$USER'@'%' WITH GRANT OPTION"
-            sudo rm /var/www/html/index.html
             sudo wget https://www.adminer.org/latest.php -O /var/www/html/adminer.php
             sudo wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip -O /var/www/html/phpmyadmin.zip
             sudo unzip -oq /var/www/html/phpmyadmin.zip -d /var/www/html/
             sudo mv /var/www/html/phpMyAdmin* /var/www/html/phpmyadmin/
+            sudo rm /var/www/html/index.html
             sudo rm /var/www/html/phpmyadmin.zip
 
             sudo mv /var/www/html/phpmyadmin/config.sample.inc.php /var/www/html/phpmyadmin/config.inc.php
@@ -36,6 +36,7 @@ if [ -f "$2" ]; then
             
             mkdir ~/.vscode
             mkdir ~/public_html
+            mkdir ~/Descargas
             sudo chmod 700 ~/bin/
             sudo chown :www-data ~/public_html -R
             sudo chmod u+rwx,g+rwxs ~/public_html -R
@@ -45,8 +46,10 @@ if [ -f "$2" ]; then
             sudo mkdir /etc/skel/public_html
             sudo chown root:root /etc/skel/.vscode/ -R
             sudo chmod u+rwx,g+rwxs,o-rwx /etc/skel/* -R
-            
-            sudo service apache2 restart
+
+            sudo -i sed 's/defaults/defaults,usrquota,grpquota/g' /etc/fstab
+            sudo quotacheck -vagum -f
+
         ;;
         -c)
             # creacion de usuarios leyendo archivo
@@ -61,6 +64,7 @@ if [ -f "$2" ]; then
                 sudo mysql -u root -e "CREATE DATABASE $alumno"
                 sudo mysql -u root -e "CREATE USER '$alumno'@'%' IDENTIFIED BY '$password'"
                 sudo mysql -u root -e "GRANT ALL PRIVILEGES ON $alumno.* TO '$alumno'@'%'"
+                sudo setquota -u $alumno 524288 1048576 0 0 /
             done < $2
             # Permisos
             sudo chown $USER /home/*
