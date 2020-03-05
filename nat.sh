@@ -6,7 +6,7 @@ else
 echo "Se necesita poner la tarjetas de red de la siguiente manera: 1º tarjeta en NAT, 2º tarjeta en red interna"
 echo "Cuando termine el script se apagara la maquina, configuralo cuando se haga si no lo has hecho ya"
 sleep 20
-sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
+sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
 echo "#!/bin/bash
 iptables -A FORWARD -j ACCEPT
 iptables -t nat -A POSTROUTING -s 192.168.2.0/24 -o enp0s3 -j MASQUERADE
