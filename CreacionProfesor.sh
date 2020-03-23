@@ -122,6 +122,7 @@ case "$1" in
         sudo mysql -u root -e "CREATE DATABASE $alumno"
         sudo mysql -u root -e "CREATE USER '$alumno'@'%' IDENTIFIED BY '$password'"
         sudo mysql -u root -e "GRANT ALL PRIVILEGES ON $alumno.* TO '$alumno'@'%'"
+        sudo mysql -u root -e "GRANT SELECT, SHOW VIEW ON $USER.* TO '$alumno'@'%'"
         sudo setquota -u $alumno 524288 1048576 0 0 /
         sudo chown $USER /home/*
         
