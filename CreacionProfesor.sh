@@ -22,7 +22,9 @@ case "$1" in
         mkdir ~/.vscode
         mkdir ~/public_html
         mkdir ~/Descargas
+        sudo mkdir -p /etc/skel/.local/bin
         sudo mkdir /etc/skel/public_html
+        sudo mkdir /etc/skel/bin
         
         # Configuracion para el editor de visual studio, ocultara los archivos que empiecen por . como por ejemplo .bashrc
         echo -e '{\n "files.exclude": {\n "**/.*": true \n } \n}' > ~/.vscode/settings.json
