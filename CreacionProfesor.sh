@@ -68,6 +68,7 @@ case "$1" in
             # creacion del usuario
             sudo useradd $alumno -m -s /bin/bash -K UMASK=007
             echo -e "$password\n$password\n" | sudo passwd $alumno &> /dev/null
+            ln -s /home/$USER/ /home/$alumno/$USER
             # esto es lo que hace que el profesor y apache pueda entrar en en los alumnos 
             sudo usermod -a -G $(id -g $alumno) $USER
             sudo usermod -a -G $(id -g $alumno) www-data
@@ -117,6 +118,7 @@ case "$1" in
         password="csas1234"
         sudo useradd $alumno -m -s /bin/bash -K UMASK=007
         echo -e "$password\n$password\n" | sudo passwd $alumno &> /dev/null
+        ln -s /home/$USER/ /home/$alumno/$USER
         sudo usermod -a -G $(id -g $alumno) $USER
         sudo usermod -a -G $(id -g $alumno) www-data
         sudo mysql -u root -e "CREATE DATABASE $alumno"
