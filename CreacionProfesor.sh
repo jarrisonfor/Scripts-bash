@@ -4,7 +4,7 @@ case "$1" in
     -i)
         # instalacion y habilitacion
         sudo apt update && sudo apt upgrade -y
-        sudo apt install ssh composer fish quota quotatool apache2 apache2-utils mysql-server zip unzip php php-mysql php-zip libapache2-mod-php php-cli php-common php-mbstring php-gd php-intl php-xml php-mysql php-zip php-curl php-xmlrpc -y
+        sudo apt install ssh composer python-pip fish quota quotatool apache2 apache2-utils mysql-server zip unzip php php-mysql php-zip libapache2-mod-php php-cli php-common php-mbstring php-gd php-intl php-xml php-mysql php-zip php-curl php-xmlrpc -y
         sudo a2dissite 000-default.conf
         sudo a2ensite default-ssl.conf
         sudo a2enmod userdir rewrite headers ssl
