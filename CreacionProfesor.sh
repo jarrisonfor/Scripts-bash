@@ -8,7 +8,7 @@ case "$1" in
         sudo a2dissite 000-default.conf
         sudo a2ensite default-ssl.conf
         sudo a2enmod userdir rewrite headers ssl
-        sudo quotacheck -a -g -u -m -c -f
+        sudo quotacheck -a -g -u -m -c -f -i -n
         
         # Configuracion de base de datos y creacion de usuario con todos los privilegios
         sudo service mysql restart
@@ -75,6 +75,7 @@ case "$1" in
             sudo mysql -u root -e "CREATE DATABASE $alumno"
             sudo mysql -u root -e "CREATE USER '$alumno'@'%' IDENTIFIED BY '$password'"
             sudo mysql -u root -e "GRANT ALL PRIVILEGES ON $alumno.* TO '$alumno'@'%'"
+            sudo mysql -u root -e "GRANT SELECT, SHOW VIEW ON $USER.* TO '$alumno'@'%'"
             # le añadimos una cuota de 1gb, a los 512mb tendra una notificacion en el terminal
             sudo setquota -u $alumno 524288 1048576 0 0 /
         done < $2
