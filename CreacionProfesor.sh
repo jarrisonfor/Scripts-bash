@@ -51,7 +51,7 @@ case "$1" in
         sudo sed -i '/DocumentRoot/ a <Directory /home/*/public_html> \n Options Indexes FollowSymLinks \n AllowOverride All \n Require all granted \n</Directory>' /etc/apache2/sites-available/default-ssl.conf
         sudo sed -i "/blowfish_secret/ c \$cfg['blowfish_secret'] = 'iVkv2U2E}E9bgpGWhUg-DpYUQf;h7rxN';" /var/www/html/phpmyadmin/config.inc.php
         sudo sed -i "/php_admin_flag engine Off/ c #php_admin_flag engine Off" /etc/apache2/mods-available/php7.*.conf
-        sudo sed -i '/exclude/ a "*/$USER": true,' /home/.vscode/settings.json
+        sudo sed -i "/exclude/ a \"*/$USER\": true," /home/.vscode/settings.json
         sudo sed -i 's/defaults/defaults,usrquota,grpquota/g' /etc/fstab
         
         clear
