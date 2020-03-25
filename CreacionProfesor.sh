@@ -8,7 +8,7 @@ case "$1" in
         sudo a2dissite 000-default.conf
         sudo a2ensite default-ssl.conf
         sudo a2enmod userdir rewrite headers ssl
-        sudo quotacheck -a -g -u -m -c -f -i -n
+
         
         # Configuracion de base de datos y creacion de usuario con todos los privilegios
         sudo service mysql restart
@@ -63,6 +63,7 @@ case "$1" in
     ;;
     -cl)
         # creacion de usuarios leyendo archivo
+        sudo quotacheck -a -g -u -m -c -f -i -n
         while read linea
         do
             # aqui definimos las variables del usuario y la contraseña
