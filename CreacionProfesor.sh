@@ -8,7 +8,6 @@ case "$1" in
         sudo a2dissite 000-default.conf
         sudo a2ensite default-ssl.conf
         sudo a2enmod userdir rewrite headers ssl
-
         
         # Configuracion de base de datos y creacion de usuario con todos los privilegios
         sudo service mysql restart
@@ -53,7 +52,7 @@ case "$1" in
         sudo sed -i '/DocumentRoot/ a <Directory /home/*/public_html> \n Options Indexes FollowSymLinks \n AllowOverride All \n Require all granted \n</Directory>' /etc/apache2/sites-available/default-ssl.conf
         sudo sed -i "/blowfish_secret/ c \$cfg['blowfish_secret'] = 'iVkv2U2E}E9bgpGWhUg-DpYUQf;h7rxN';" /var/www/html/phpmyadmin/config.inc.php
         sudo sed -i "/php_admin_flag engine Off/ c #php_admin_flag engine Off" /etc/apache2/mods-available/php7.*.conf
-        sudo sed -i "/exclude/ a \"*/$USER\": true," /home/.vscode/settings.json
+        sudo sed -i "/exclude/ a \"*/compartida\": true," /home/.vscode/settings.json
         sudo sed -i 's/defaults/defaults,usrquota,grpquota/g' /etc/fstab
         
         clear
@@ -72,10 +71,13 @@ case "$1" in
             # creacion del usuario
             sudo useradd $alumno -m -s /bin/bash -K UMASK=007
             echo -e "$password\n$password\n" | sudo passwd $alumno &> /dev/null
-            ln -s /home/$USER/ /home/$alumno/$USER
             # esto es lo que hace que el profesor y apache pueda entrar en en los alumnos 
             sudo usermod -a -G $(id -g $alumno) $USER
             sudo usermod -a -G $(id -g $alumno) www-data
+            # cambiamos el propietario de la carpeta principal a la del profesor
+            sudo chown $USER /home/$alumno
+            # un acceso directo a la carpeta del profesor
+            ln -s /home/$USER/ /home/$alumno/compartida
             # creacion de la base de datos y su usuario
             sudo mysql -u root -e "CREATE DATABASE $alumno"
             sudo mysql -u root -e "CREATE USER '$alumno'@'%' IDENTIFIED BY '$password'"
@@ -84,8 +86,7 @@ case "$1" in
             # le añadimos una cuota de 1gb, a los 512mb tendra una notificacion en el terminal
             sudo setquota -u $alumno 524288 1048576 0 0 /
         done < $2
-        # hacer dueño de todas carpetas de usuarios al profesor
-        sudo chown $USER /home/*
+        
         
         echo "Se reiniciara la maquina para recargar los cambios"
         sleep 20
@@ -122,7 +123,6 @@ case "$1" in
         password="csas1234"
         sudo useradd $alumno -m -s /bin/bash -K UMASK=007
         echo -e "$password\n$password\n" | sudo passwd $alumno &> /dev/null
-        ln -s /home/$USER/ /home/$alumno/$USER
         sudo usermod -a -G $(id -g $alumno) $USER
         sudo usermod -a -G $(id -g $alumno) www-data
         sudo mysql -u root -e "CREATE DATABASE $alumno"
@@ -130,8 +130,9 @@ case "$1" in
         sudo mysql -u root -e "GRANT ALL PRIVILEGES ON $alumno.* TO '$alumno'@'%'"
         sudo mysql -u root -e "GRANT SELECT, SHOW VIEW ON $USER.* TO '$alumno'@'%'"
         sudo setquota -u $alumno 524288 1048576 0 0 /
-        sudo chown $USER /home/*
-        
+        sudo chown $USER /home/$alumno
+        ln -s /home/$USER/ /home/$alumno/compartida
+
         echo "se aconseja reiniciar la maquina para que los cambios tengan efecto"
     ;;
     -bu)
